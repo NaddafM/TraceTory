@@ -29,10 +29,10 @@ let MsgEror="";
 document.querySelector("#login_button").addEventListener("click", validtionMailAndPassword);
 function validtionMailAndPassword()
 {
-    let email= document.getElementById("user_mail").value;   
+    let str= document.getElementById("user_mail").value;   
     let password1= document.getElementById("user_password").value;  
 
-    isMailVaild(email); 
+    isMailVaild(str); 
 
     if(password1.length<8)
     {
@@ -48,17 +48,17 @@ function validtionMailAndPassword()
 }
 
 
-function isMailVaild(email)
+function isMailVaild(str)
 {    
     const regex= /^\w+[\w-\.]*\@\w+((-\w+)|(\w*))\.[a-z]{2,3}$/;
    
 
-    if(email.length==0)
+    if(str.length==0)
     {
         MsgEror+="Mail Field Is Empty";
         return MsgEror;
     }
-    if(!(regex.test(email)))
+    if(!(regex.test(str)))
     {
         if(MsgEror.length>0)
             MsgEror+="\n";
