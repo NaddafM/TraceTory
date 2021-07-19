@@ -1,23 +1,34 @@
 $(document).ready(function(){
     //Change the navbar title dynamicly
     $('.header .title').html("Restore Password");
+    $('title').html("Restore Password");
+
+
+    // if($("#container3").data("mail")){
+    //     $('.header #nav_signIN_LogOut').html("Log-Out");
+    //     $('.header #nav_signIN_LogOut').attr("href", "LogOut.html");
+    // }
+       
+    // else{
+    //     $('.header #nav_signIN_LogOut').html("Log-In");
+    //     $('.header #nav_signIN_LogOut').attr("href", "signIN.html");
+    // }
+
 });
 
 let MsgEror="";
 
-document.querySelector("#reset_password_button").addEventListener("click", RestorePassword);
 function RestorePassword()
-{
-    
-    let str= document.getElementById("user_mail").value;   
-    
+{    let str= $("#user_mail").val();
     if(isMailVaild(str))
     {
-        alert("קישור לאיפוס סיסמה נשלח\n"+"למייל: "+str);
+        alert("The link to restore Password send to: '"+str+"'");
+        return true;
     }
     else
     {
         alert(MsgEror);
+        return false;
     }
 }
 
@@ -29,7 +40,7 @@ function isMailVaild(str)
 
     if(str.length==0)
     {
-        MsgEror+="Mail Field Is Empty";
+        MsgEror+="Mail field is empty";
         bool=false;
         return bool;
     }
@@ -37,9 +48,29 @@ function isMailVaild(str)
     {
         if(MsgEror.length>0)
             MsgEror+="\n";
-        MsgEror+="NOT Valid Mail";
+        MsgEror+="Invalid Mail";
         bool=false;
         return bool;
     }
     return bool;    
 }
+
+
+const inputs = document.querySelectorAll(".input");
+function addcl(){
+	let parent = this.parentNode.parentNode;
+	parent.classList.add("focus");
+}
+
+function remcl(){
+	let parent = this.parentNode.parentNode;
+	if(this.value == ""){
+		parent.classList.remove("focus");
+	}
+}
+
+
+inputs.forEach(input => {
+	input.addEventListener("focus", addcl);
+	input.addEventListener("blur", remcl);
+});

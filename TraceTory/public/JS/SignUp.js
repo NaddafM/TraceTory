@@ -1,10 +1,56 @@
 $(document).ready(function(){
     //Change the navbar title dynamicly
     $('.header .title').html("Sign Up");
+    $('title').html("Sign Up");
+    
+    if($("#container2").data("mail")){
+        $('.header #nav_signIN_LogOut').html("Log-Out");
+        $('.header #nav_signIN_LogOut').attr("href", "LogOut.html");
+    }       
+    else{
+        $('.header #nav_signIN_LogOut').html("Log-In");
+        $('.header #nav_signIN_LogOut').attr("href", "signIN.html");
+    }
+
+
+    $("#form2").submit(function(e){        
+        e.preventDefault();        
+        
+        if(validtionMailAndPassword()===true){
+            $.ajax({
+                type: "POST",
+                url: 'api/addUser.html',
+                data: $(this).serialize(),
+                success: function(response)
+                {                                   
+                    console.log(response);
+                    let jsonData= JSON.parse(response); 
+
+                    if(jsonData.success===1)
+                    {
+                        let str="Hello '"+ $("#user_name").val() +"' and welcome to 'AwesomeList',\n Let's Log-In";                        
+                        alert(str); 
+                        location.replace("signIN.html");
+                    }
+                    else if(jsonData.success===2)
+                    {
+                        let str="The mail: '"+ $("#user_mail").val() + "' is already used";
+                        location.replace("SignUp.html?err=1&errText="+str+"");
+                    }
+                    else if(jsonData.success===0)  
+                    {
+                        $("#errorLabel").val("somthing went wrong");
+                        location.replace("SignUp.html?err=1&errText="+str+"");                    
+                    }         
+                }
+            });  
+        }
+    })    
+
 });
+
+
 const inputs = document.querySelectorAll(".input");
-
-
 function addcl(){
 	let parent = this.parentNode.parentNode;
 	parent.classList.add("focus");
@@ -34,22 +80,23 @@ function isMailVaild(str)
 
     if(str.length==0)
     {
-        MsgEror+="Mail Field Is Empty";
+        MsgEror+="Mail field is empty";
         return MsgEror;
     }
     if(!(regex.test(str)))
     {
         if(MsgEror.length>0)
             MsgEror+="\n";
-        MsgEror+="NOT Valid Mail";
+        MsgEror+="Invalid Mail";
         return MsgEror;
     }
         
 }
 
-document.querySelector("#SignUp_button").addEventListener("click", validtionMailAndPassword);
+//document.querySelector("#SignUp_button").addEventListener("click", validtionMailAndPassword);
 function validtionMailAndPassword()
 {
+    MsgEror="";
     let name= document.getElementById("user_name").value; 
     let str1= document.getElementById("user_mail").value;   
     let str2= document.getElementById("confirm_user_mail").value;
@@ -62,14 +109,14 @@ function validtionMailAndPassword()
     {
         if(MsgEror.length>0)
             MsgEror+="\n";
-        MsgEror+="NOT valid name, need 2 letters or more";
+        MsgEror+="Invalid Name, correct name need at least 2 letters or more";
     }    
    
     if(password1.length<8)
     {
         if(MsgEror.length>0)
             MsgEror+="\n";
-        MsgEror+="NOT valid password, need 8 letters or more";
+        MsgEror+="Invalid Password, correct Password need at least 8 letters or more";
     }
 
     if(str2.length!=0)
@@ -88,10 +135,13 @@ function validtionMailAndPassword()
         MsgEror+="Verification of Password not correct";
     }
 
+    if(MsgEror.length>0)
+        alert(MsgEror);
+        
     if(MsgEror.length==0)
-        alert("succes");
+        return true;
     else
-        alert(MsgEror);    
+        return false;
 }
 
 function checkEquals2Strings(s1,s2,c)
